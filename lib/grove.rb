@@ -1,18 +1,17 @@
 require 'faraday'
 
 class Grove
-  attr_reader :channel_key
+  attr_reader :channel_key, :last_status
   attr_accessor :service_name, :icon_url, :url
 
   GROVE_API_URI = "https://grove.io/api/notice/%s/"
+  DEFAULT_SERVICE_NAME = 'Grove-rb'
 
   def initialize(channel_key, options = {})
     @channel_key    = channel_key
-    @service_name   = options[:service] || "Grove-rb"
+    @service_name   = options[:service] || DEFAULT_SERVICE_NAME
     @icon_url       = options[:icon_url]
     @url            = options[:url]
-
-    @last_status    = ""
   end
 
   def post(message)
@@ -23,8 +22,9 @@ class Grove
       :url => url
     }
 
-    response      = client.post "", options
-    @last_status  = response.status
+    options = options.delete_if { |k,v| v.nil? }
+
+    client.post "", options
   end
 
   def success?
