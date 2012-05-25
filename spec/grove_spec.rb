@@ -2,6 +2,7 @@ require File.dirname( __FILE__ ) + '/../lib/grove-rb'
 
 describe Grove do
   let(:channel_key) { '12345678901234567890123456789012' }
+  let(:client) { stub }
 
   context "when initializing" do
     it "should set the channel_key" do
@@ -44,20 +45,45 @@ describe Grove do
     let(:g) { Grove.new( channel_key )}
 
     it "should set service_name" do
-      lambda { g.service_name = 'new servicename' }.should change(g, :service_name)
+      lambda { g.service_name = 'new servicename' }.should change { g.service_name }
     end
 
     it "should set icon_url" do
-      lambda { g.icon_url = 'new icon url' }.should change(g, :icon_url)
+      lambda { g.icon_url = 'new icon url' }.should change { g.icon_url }
     end
 
     it "should set url" do
-      lambda { g.url = 'new url' }.should change(g, :url)
+      lambda { g.url = 'new url' }.should change { g.url }
+    end
+
+    context "when changing the channel_key" do
+
+      it "should use the new key with calls" do
+        Faraday.should_receive(:new).and_return { client }
+        client.should_receive(:post).at_least(:once)
+        g.post('hi')
+
+        new_channel_key = channel_key.reverse
+
+        g.channel_key = new_channel_key
+
+        Faraday.should_receive(:new).with { |options|
+          options[:url].should match %r{#{new_channel_key}}
+        }.and_return(client)
+
+        g.post('hi')
+      end
+
+      it "should use the new key with calls" do
+        g = Grove.new(channel_key)
+
+        lambda { g.channel_key = 'asdf' }.should change { g.channel_key }
+      end
+
     end
   end
 
   context "posting messages" do
-    let (:client) { stub }
 
     it "should put the message in the options" do
       Faraday.stub(:new).and_return(client)

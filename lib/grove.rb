@@ -14,6 +14,11 @@ class Grove
     @url            = options[:url]
   end
 
+  def channel_key=(new_channel_key)
+    @client = nil
+    @channel_key = new_channel_key
+  end
+
   def post(message)
     options = {
       :message => message,
