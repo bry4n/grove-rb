@@ -1,7 +1,8 @@
 require 'faraday'
 
 class Grove
-  attr_accessor :channel_key, :service_name, :icon_url, :url
+  attr_reader :channel_key
+  attr_accessor :service_name, :icon_url, :url
 
   GROVE_API_URI = "https://grove.io/api/notice/%s/"
 
