@@ -1,18 +1,28 @@
 require 'faraday'
 
 class Grove
-  attr_accessor :channel_key, :service_name
+  attr_accessor :channel_key, :service_name, :icon_url, :url
 
   GROVE_API_URI = "https://grove.io/api/notice/%s/"
 
-  def initialize(channel_key, service_name = nil)
+  def initialize(channel_key, options = {})
     @channel_key    = channel_key
-    @service_name   = service_name || "Grove-rb"
+    @service_name   = options[:service] || "Grove-rb"
+    @icon_url       = options[:icon_url]
+    @url            = options[:url]
+
     @last_status    = ""
   end
 
   def post(message)
-    response      = client.post "", {:service => service_name, :message => message}
+    options = {
+      :message => message,
+      :service => service_name,
+      :icon_url => icon_url,
+      :url => url
+    }
+
+    response      = client.post "", options
     @last_status  = response.status
   end
 
