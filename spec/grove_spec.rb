@@ -11,16 +11,16 @@ describe Grove do
       g.channel_key.should == channel_key
     end
 
-    it "should set the service_name" do
+    it "should set the service" do
       g = Grove.new(channel_key, :service => 'asdf')
 
-      g.service_name.should == 'asdf'
+      g.service.should == 'asdf'
     end
 
-    it "should have a default service_name" do
+    it "should have a default service" do
       g = Grove.new(channel_key)
 
-      g.service_name.should == 'Grove-rb'
+      g.service.should == 'Grove-rb'
     end
 
     it "should set the icon_url" do
@@ -44,8 +44,8 @@ describe Grove do
   context "when modifying existing attributes" do
     let(:g) { Grove.new( channel_key )}
 
-    it "should set service_name" do
-      lambda { g.service_name = 'new servicename' }.should change { g.service_name }
+    it "should set service" do
+      lambda { g.service = 'new servicename' }.should change { g.service }
     end
 
     it "should set icon_url" do
