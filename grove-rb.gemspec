@@ -12,5 +12,5 @@ Gem::Specification.new do |gem|
   gem.homepage      = "http://github.com/bry4n/grove-rb"
   gem.files = Dir['**/*']
   # gem.executables = ""
-  gem.add_dependency "faraday", "~> 0.7.6"
+  gem.add_dependency "faraday", "~> 0.7"
 end
